@@ -37,19 +37,19 @@ export class HomePage {
     */
    public tracks         : any     = [
    										{
-   										   artist  : 'Arcane',
-                                           name    : 'Season 01',
-   										   track   : 'assets/sounds/arcane_01.mp3'
+   										   artist  : 'Ring',
+                                    name    : '01',
+   										   track   : 'assets/sounds/Ring01.wav'
    										},
    										{
-                                           artist  : 'Arcane',
-   										   name    : 'Season 02',
-   										   track   : 'assets/sounds/arcane_02.mp3'
+                                    artist  : 'Ring',
+   										   name    : '02',
+   										   track   : 'assets/sounds/Ring02.wav'
    										},
    										{
-                                           artist  : 'Arcane',
-   										   name    : 'Season 03',
-   										   track   : 'assets/sounds/arcane_03.mp3'
+                                    artist  : 'Ring',
+   										   name    : '03',
+   										   track   : 'assets/sounds/Ring03.wav'
    										},
    									]; 
 
@@ -100,8 +100,9 @@ export class HomePage {
     {
       console.log("triggerPlayback")
       console.log(track)
-       this._AUDIO.loadSound(track);
+       this._AUDIO.loadSound(track,this.volume, this.pan, this.osc);
        this.isPlaying  = true;
+       
     }
  
  
@@ -146,12 +147,12 @@ export class HomePage {
      * @param pan {Any} The oscillator control slider value
      * @return {none}
      */
-            changeOscillator(value : any) : void
-            {
-              console.log("HOME changeOscillator");
-               console.log(value);
-               this._AUDIO.changeOscillator(value);
-            }
+      changeOscillator(value : any) : void
+      {
+         console.log("HOME changeOscillator");
+         console.log(value);
+         this._AUDIO.changeOscillator(value);
+      }
       
  
  
@@ -178,7 +179,7 @@ export class HomePage {
      */
      startPlayback() : void
      {        
-        this._AUDIO.playSoundTest();
+        this._AUDIO.playSoundTest(this.volume, this.pan, this.osc);
         this.isPlaying  = true;
      }
 

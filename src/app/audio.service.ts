@@ -67,6 +67,11 @@ export class AudioService {
    private _pannerOptions        : any    = null; 
 
 
+   public volume                 : any = 50;
+   public pan                    : any = 0;
+   public osc                    : any = 100;
+
+
    constructor(public http      : HttpClient,
                private _LOADER  : LoadingController) 
    { }
@@ -78,14 +83,14 @@ export class AudioService {
     *
     * Load the requested track
     *
-    * @method loadSound
+    * @method loadResetSound
     * @param track {String} The file path of the audio track to be loaded
     * @return {none}
     */
-   loadSound(track : string) : void
+   loadResetSound(track : string) : void
    {      
       //this.displayPreloader('Loading track...');
-      console.log("AUDIO loadSound")
+      console.log("AUDIO loadResetSound")
       console.log(track) 
       this.http.get(track, { responseType: 'arraybuffer' })
       .subscribe((arrayBufferContent : any) =>
@@ -94,6 +99,30 @@ export class AudioService {
       });
    }
 
+   /**
+       *
+       * Load the requested track
+       *
+       * @method loadSound
+       * @param track {String} The file path of the audio track to be loaded
+       * @param volume {any} The current volume input value       * 
+       * @param pan {any} The current pan input value       * 
+       * @param osc {any} The current osc input value       * 
+       * @return {none}
+       */
+   loadSound(track : string, volume : any, pan : any, osc: any) : void
+   {      
+      //this.displayPreloader('Loading track...');
+      console.log("AUDIO loadResetSound")
+      console.log(track) 
+
+
+      this.http.get(track, { responseType: 'arraybuffer' })
+      .subscribe((arrayBufferContent : any) =>
+      {
+         this.setUpAudio(arrayBufferContent);                  
+      });
+   }
 
 
 
@@ -115,6 +144,7 @@ export class AudioService {
          this._AUDIO         = buffer;
          this._TRACK         = this._AUDIO;
          this.playSoundTrack(this._TRACK);
+         
       });
    }
 
@@ -164,6 +194,11 @@ export class AudioService {
       this._ISSOUNDCHECK = false;
       this._SOURCE.start(0);
       this.hidePreloader();
+
+      this.changeVolume(this.volume);
+      this.changePan(this.pan);
+      this.changeOscillator(this.osc);
+      
    }
 
    /**
@@ -171,12 +206,16 @@ export class AudioService {
     * Play the audio test
     *
     * @method playSoundTest
-    * @param 
+    * @param volume {any} The current volume input value       * 
+    * @param pan {any} The current pan input value       * 
+    * @param osc {any} The current osc input value       * 
     * @return {none}
     */
-    playSoundTest() : void
+    playSoundTest(volume : any, pan : any, osc : any) : void
     {      
        console.log("AUDIO playSoundTrack")
+       
+
        if (!this._CONTEXT.createGain)
        {
           this._CONTEXT.createGain   = this._CONTEXT.createGainNode;
@@ -208,6 +247,10 @@ export class AudioService {
       
        this._ISSOUNDCHECK = true;
        this.hidePreloader();
+
+      this.changeVolume(this.volume);
+      this.changePan(this.pan);
+      this.changeOscillator(this.osc);
     }
 
 
@@ -285,12 +328,14 @@ export class AudioService {
    {
       console.log('AUDIO changeVolume');
       console.log(volume);
+      this.volume = volume;
       //let percentile : number    = parseInt(volume.value) / parseInt(volume.max);
       let percentile : number    = parseInt(volume) / 100;
       // A straightforward use of the supplied value sounds awful
       // so we're using a fraction of the supplied value to
       // handle this situation
-      this._GAIN.gain.value      = percentile * percentile;
+      if (this._GAIN)
+         this._GAIN.gain.value      = percentile * percentile;
    }
 
 
@@ -306,9 +351,12 @@ export class AudioService {
     {
        console.log('AUDIO changePan');
        console.log(pan);
-       this._PANNER.orientationX.value = pan;
-       this._PANNER.positionX.value = pan;
-       console.log(this._PANNER.orientationX.value);
+       this.pan = pan;
+       if (this._PANNER){
+         this._PANNER.orientationX.value = pan;
+         this._PANNER.positionX.value = pan;
+         console.log(this._PANNER.orientationX.value);
+      }
     }
 
      /**
@@ -321,12 +369,13 @@ export class AudioService {
     */
       changeOscillator(value : any) : void
       {
-         console.log('AUDIO changePan');
+         console.log('AUDIO changeOscillator');
          console.log(value);
-
-         this._OSCILLATOR.frequency.value = (value/this._MAXOSCILLATORVAL) * this._MAXFREQ;
-
-         console.log(this._OSCILLATOR.frequency.value);
+         this.osc = value;
+         if (this._OSCILLATOR){
+            this._OSCILLATOR.frequency.value = (value/this._MAXOSCILLATORVAL) * this._MAXFREQ;
+            console.log(this._OSCILLATOR.frequency.value);
+         }
       }
  
 

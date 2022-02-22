@@ -16,23 +16,21 @@
   <!--
      Stops playback of audio track currently playing
    -->
-   <button 
-      ion-button 
+   <ion-button 
       block 
       color="danger" 
       (click)="stopPlayback()">
       Stop Sounds
-   </button>
+   </ion-button>
    <!--
      Starts playback of audio test
    -->
-   <button 
-      ion-button 
+   <ion-button 
       block 
-      color="danger" 
+      color="success" 
       (click)="startPlayback()">
       Start Test
-   </button>
+   </ion-button>
 
 
    <!--
@@ -98,12 +96,12 @@
      class, embed data in button and allow track to be
      selected/played
    -->   
-   <button *ngFor="let track of tracks"
-      ion-button 
+   <ion-button *ngFor="let track of tracks"
+       
       block 
       color="primary" 
       (click)="loadSound(track.track)">
       {{ track.artist}} - {{ track.name }}
-   </button>
+   </ion-button>
  
 </ion-content>
